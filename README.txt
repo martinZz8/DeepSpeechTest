@@ -7,7 +7,7 @@ Based on: https://deepspeech.readthedocs.io/en/v0.9.3/
 - model: https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm
 - scorer: https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
 4. Run transcription of audio file:
-deepspeech --model data/model/deepspeech-0.9.3-models.pbmm --scorer data/model/deepspeech-0.9.3-models.scorer --audio data/audio/english/audio_2.wav > data/output/output.txt
+deepspeech --model data/model/english/deepspeech-0.9.3-models.pbmm --scorer data/model/english/deepspeech-0.9.3-models.scorer --audio data/audio/english/audio_2.wav > data/output/output.txt
 
 Note:
 - We need to use .wav files only in sampling of 16000Hz (16MHz)
@@ -25,3 +25,10 @@ Note:
 2. Polish: (from: https://www.kaggle.com/code/jimregan/polish-deepspeech-models)
 
 Note: To get data (models and audio), search them on my MediaFire account or outer disc drive
+
+-- FFMPEG --
+1. ffmpeg download: https://www.gyan.dev/ffmpeg/builds/
+2. ffmpeg documentation: https://ffmpeg.org/ffmpeg.html
+3. Note, that ffmpeg tool location should be added to Windows PATH env variable
+4. Example of changing MP3 -> WAV (with 16kHz audio sampling frequency)
+ffmpeg -i example_1.mp3 -y -loglevel quiet -ar 16000 example_1.wav

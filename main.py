@@ -1,8 +1,9 @@
-from os import listdir
+from os import listdir, remove
 from os.path import dirname, isfile, join, basename
-import subprocess
 from modelPaths import ModelPaths, AvailableLanguagesEnum
 from helpers.getFileExtension import getFileExtension
+from helpers.convertFileToWav import convertFileToWav
+from helpers.transcriptFile import transcriptFile
 
 
 def main():
@@ -10,14 +11,17 @@ def main():
     cwd = dirname(__file__)
 
     # -- Options --
-    availableExtensions = [".wav"]
-    folderNameToProcess = "data/audio/english"  # None or folder path relative to cwd
+    availableExtensions = [".wav", ".mp3", ".mp4"]
+    folderNameToProcess = "data/audio/english"  # None or folder path relative to cwd (can be "data/audio/<language>" or "data/video/<language>")
     # Specify file names to transcript (relative path to cwd)
     # Note: if variable "folderNameToProcess" is specified, this variable is overridden
     filePathsToTranscript = [
         "data/audio/english/audio_2.wav",
-        "data/audio/polish/audio_1.wav"
+        "data/audio/polish/audio_1.wav",
+        "data/audio/english/audio_5.mp3",
+        "data/video/english/video_1.mp4"
     ]
+    tempFolder = "data/_temp"
     outputFolder = "data/output"  # Path relative to cwd
     outputFileSuffix = "output"
     modelPaths = {
@@ -33,9 +37,13 @@ def main():
         )
     }
 
+    # -- Create copy of "availableExtensions" for conversion of other types than ".wav"
+    indexOfWavItem = availableExtensions.index(".wav")
+    extensionsToBeConverted = availableExtensions[:indexOfWavItem] + availableExtensions[indexOfWavItem+1:]
+
     # -- Specify "filePathsToTranscript" (if "folderNameToProcess" is specified) --
     if folderNameToProcess is not None:
-        absolutePathToAudioFolder = join(cwd, folderNameToProcess)
+        absolutePathToAudioFolder = f"{cwd}/{folderNameToProcess}"
         filePathsToTranscript = [
             f"{folderNameToProcess}/{f}"
             for f in listdir(absolutePathToAudioFolder)
@@ -43,9 +51,6 @@ def main():
         ]
 
     # -- Transcript files --
-    # Determine process name
-    processName = "deepspeech"
-
     for (idx, filePathToTranscript) in enumerate(filePathsToTranscript):
         # Determine the language the audio file is using
         currentLanguage: AvailableLanguagesEnum = AvailableLanguagesEnum.ENGLISH
@@ -63,27 +68,25 @@ def main():
         if currentLanguage == AvailableLanguagesEnum.POLISH:
             currentModelPath = modelPaths.get("polish")
 
-        # Determine arguments for the process
-        fileNameWithoutExtension = ".".join(basename(filePathToTranscript).split(".")[:-1])
+        # Convert file into ".wav" 16kHz frequency (if it's already in other file type than ".wav")
+        deleteTempFileAfterProcess = False
+        fileExtension = getFileExtension(filePathToTranscript)
 
-        processArguments = [
-            "--model",
-            currentModelPath.modelPath,
-            "--scorer",
-            currentModelPath.scorerPath,
-            "--audio",
-            filePathToTranscript
-        ]
+        if fileExtension in extensionsToBeConverted:
+            filePathToTranscript = convertFileToWav(filePathToTranscript, tempFolder, cwd)
+            deleteTempFileAfterProcess = True
 
-        # Determine outputFilePath
-        outputFilePath = join(cwd, outputFolder, f"{fileNameWithoutExtension}_{currentLanguage.name.lower()}_{outputFileSuffix}.txt")
-
-        # Open the file "outputFilePath" and run the process
+        # Start process to transcript file
         print(f"-- Processing file: {filePathToTranscript} ({idx + 1} of {len(filePathsToTranscript)}; {currentLanguage.name.lower()} language) --")
 
-        with open(outputFilePath, "w", encoding="utf-8") as stdout:
-            lsOutput = subprocess.Popen([processName] + processArguments, stdout=stdout, cwd=cwd)
-            lsOutput.communicate()  # Will block for 30 seconds
+        # Determine outputFilePath
+        fileNameWithoutExtension = ".".join(basename(filePathToTranscript).split(".")[:-1])
+        outputFilePath = f"{cwd}/{outputFolder}/{fileNameWithoutExtension}_{currentLanguage.name.lower()}_{outputFileSuffix}.txt"
+
+        transcriptFile(filePathToTranscript, outputFilePath, currentModelPath, cwd)
+
+        if deleteTempFileAfterProcess:
+            remove(filePathToTranscript)
 
 
 if __name__ == "__main__":
