@@ -1,5 +1,6 @@
 from os import listdir, remove
 from os.path import dirname, isfile, join, basename
+from datetime import datetime
 from modelPaths import ModelPaths, AvailableLanguagesEnum
 from helpers.getFileExtension import getFileExtension
 from helpers.convertFileToWav import convertFileToWav
@@ -17,7 +18,6 @@ def main():
     # Note: if variable "folderNameToProcess" is specified, this variable is overridden
     filePathsToTranscript = [
         "data/audio/english/audio_2.wav",
-        "data/audio/polish/audio_1.wav",
         "data/audio/english/audio_5.mp3",
         "data/video/english/video_1.mp4"
     ]
@@ -81,7 +81,7 @@ def main():
 
         # Determine outputFilePath
         fileNameWithoutExtension = ".".join(basename(filePathToTranscript).split(".")[:-1])
-        outputFilePath = f"{cwd}/{outputFolder}/{fileNameWithoutExtension}_{currentLanguage.name.lower()}_{outputFileSuffix}.txt"
+        outputFilePath = f"{cwd}/{outputFolder}/{fileNameWithoutExtension}_{currentLanguage.name.lower()}_{outputFileSuffix}_{datetime.today().strftime('%Y-%m-%dT%H-%M-%S')}.txt"
 
         transcriptFile(filePathToTranscript, outputFilePath, currentModelPath, cwd)
 

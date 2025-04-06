@@ -1,7 +1,4 @@
 import subprocess
-#import sys
-#from os.path import dirname
-#sys.path.append(dirname(dirname(__file__)))
 from modelPaths import ModelPaths
 
 
