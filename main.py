@@ -5,6 +5,7 @@ from modelPaths import ModelPaths, AvailableLanguagesEnum
 from helpers.getFileExtension import getFileExtension
 from helpers.convertFileToWav import convertFileToWav
 from helpers.transcriptFile import transcriptFile
+from helpers.isWav16kHzAudioFile import isWav16kHzAudioFile
 
 
 def main():
@@ -13,13 +14,13 @@ def main():
 
     # -- Options --
     availableExtensions = [".wav", ".mp3", ".mp4"]
-    folderNameToProcess = "data/audio/english"  # None or folder path relative to cwd (can be "data/audio/<language>" or "data/video/<language>")
+    folderNameToProcess = None  # None or folder path relative to cwd (can be "data/audio/<language>" or "data/video/<language>")
     # Specify file names to transcript (relative path to cwd)
     # Note: if variable "folderNameToProcess" is specified, this variable is overridden
     filePathsToTranscript = [
         "data/audio/english/audio_2.wav",
         "data/audio/english/audio_5.mp3",
-        "data/video/english/video_1.mp4"
+        #"data/video/english/video_1.mp4"
     ]
     tempFolder = "data/_temp"
     outputFolder = "data/output"  # Path relative to cwd
@@ -72,7 +73,7 @@ def main():
         deleteTempFileAfterProcess = False
         fileExtension = getFileExtension(filePathToTranscript)
 
-        if fileExtension in extensionsToBeConverted:
+        if (fileExtension in extensionsToBeConverted) or (not isWav16kHzAudioFile(filePathToTranscript)):
             filePathToTranscript = convertFileToWav(filePathToTranscript, tempFolder, cwd)
             deleteTempFileAfterProcess = True
 
