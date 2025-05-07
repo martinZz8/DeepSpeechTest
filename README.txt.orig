@@ -1,12 +1,19 @@
 Based on: https://deepspeech.readthedocs.io/en/v0.9.3/
 
 ** How to launch the deepspeech tool (from the cmd) **:
+<<<<<<< HEAD
+Note: Use Python 3.9, previous installation of this version needed (if there's need to create env, do it via "py -3 -m virtualenv --python=3.9 env")
+1. Launch the virtualenv using: cmd -> powershell -> env\Scripts\activate
+2. Install needed dependencies: python -m pip install -r requirements.txt
+Note: To export dependencies we can use: python -m pip freeze > requirements.txt
+3. Download needed models (and place them inside "data/models" folder of the project:
+=======
 1. Install python3.12
 2. Create virtualenv using: cmd -> py -3.12 -m virtualenv env
 3. Launch the virtualenv using: cmd -> powershell -> env\Scripts\activate
 4. Install needed dependencies: python -m pip install -r requirements.txt
-Note: To export dependencies we can use: python -m pip freeze > requirements.txt
 5. Download needed models (and place them inside "data/models" folder of the project:
+>>>>>>> e068f8a5cd115c336a3b643bebedfb238c265b81
 - model: https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm
 - scorer: https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
 6. Run transcription of audio file:

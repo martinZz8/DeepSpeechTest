@@ -5,7 +5,6 @@ Based on: https://deepspeech.readthedocs.io/en/v0.9.3/
 2. Create virtualenv using: cmd -> py -3.12 -m virtualenv env
 3. Launch the virtualenv using: cmd -> powershell -> env\Scripts\activate
 4. Install needed dependencies: python -m pip install -r requirements.txt
-Note: To export dependencies we can use: python -m pip freeze > requirements.txt
 5. Download needed models (and place them inside "data/models" folder of the project:
 - model: https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm
 - scorer: https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
