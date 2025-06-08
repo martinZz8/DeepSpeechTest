@@ -30,7 +30,11 @@ We could also use miniconda to install needed python environment:
 - scrorer: https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
 2. Polish: (from: https://www.kaggle.com/code/jimregan/polish-deepspeech-models)
 
-Note: To get data (models and audio), search them on my MediaFire account or outer disc drive
+Note: To get data (models and audio), search them on my MediaFire account or outer disc drive1. ffmpeg download: https://www.gyan.dev/ffmpeg/builds/
+2. ffmpeg documentation: https://ffmpeg.org/ffmpeg.html
+3. Note, that ffmpeg tool location should be added to Windows PATH env variable
+4. Example of changing MP3 -> WAV (with 16kHz audio sampling frequency)
+ffmpeg -i example_1.mp3 -y -loglevel quiet -ar 16000 example_1.wav
 
 -- FFMPEG --
 1. ffmpeg download: https://www.gyan.dev/ffmpeg/builds/
